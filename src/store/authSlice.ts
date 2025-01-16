@@ -5,6 +5,7 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   error: null,
+  theme: 'dark',
 };
 
 const authSlice = createSlice({
@@ -29,8 +30,11 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    toggleTheme: (state) => {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    },
   },
 });
 
-export const { loginSuccess, loginFailure, logout, clearError } = authSlice.actions;
+export const { loginSuccess, loginFailure, logout, clearError, toggleTheme } = authSlice.actions;
 export default authSlice.reducer;

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListTodo, Calendar, Star, ClipboardList, UserSquare2, LogOut, Plus } from 'lucide-react';
 import { RootState } from '../store';
 import { setFilter } from '../store/tasksSlice';
-// import { logout } from '../store/authSlice';
+import { logout } from '../store/authSlice';
 import { addList, setCurrentList } from '../store/tasksSlice';
 import { TasksState } from '../types';
 
@@ -17,6 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const tasks = useSelector((state: RootState) => state.tasks.tasks);
   const lists = useSelector((state: RootState) => state.tasks.lists);
+  const theme = useSelector((state: RootState) => state.auth.theme);
   
   const [showNewListInput, setShowNewListInput] = useState(false);
   const [newListName, setNewListName] = useState('');
@@ -51,7 +52,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="w-64 bg-[#141414] min-h-screen p-4 flex flex-col">
+    <div className={`w-64 min-h-screen p-4 flex flex-col ${
+      theme === 'dark' ? 'bg-[#141414]' : 'bg-white'
+    }`}>
       <div className="flex items-center mb-8">
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <img 
@@ -61,7 +64,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           />
         </div>
         <div className="ml-3">
-          <p className="text-white font-medium">Hey, {user?.name}</p>
+          <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+            Hey, {user?.name}
+          </p>
           <p className="text-sm text-gray-400">{user?.email}</p>
         </div>
       </div>
@@ -71,10 +76,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           <button
             key={id}
             onClick={() => dispatch(setFilter(id as TasksState['filter']))}
-            className={`w-full flex items-center p-3 rounded-lg ${
+            className={`w-full flex items-center p-3 rounded-lg transition-colors ${
               currentFilter === id 
                 ? 'bg-[#1e2b23] text-green-500' 
-                : 'text-gray-300 hover:bg-[#1e2b23] hover:text-green-500'
+                : theme === 'dark'
+                  ? 'text-gray-300 hover:bg-[#1e2b23] hover:text-green-500'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-green-600'
             }`}
           >
             <Icon className="w-5 h-5 mr-3" />
@@ -86,7 +93,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           <button
             key={list.id}
             onClick={() => dispatch(setCurrentList(list.id))}
-            className="w-full flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#1e2b23] hover:text-green-500"
+            className={`w-full flex items-center p-3 rounded-lg transition-colors ${
+              theme === 'dark'
+                ? 'text-gray-300 hover:bg-[#1e2b23] hover:text-green-500'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-green-600'
+            }`}
           >
             <div 
               className="w-3 h-3 rounded-full mr-3"
@@ -104,7 +115,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
             placeholder="List name"
-            className="w-full bg-[#1e2b23] text-white p-2 rounded-lg mb-2"
+            className={`w-full p-2 rounded-lg mb-2 ${
+              theme === 'dark'
+                ? 'bg-[#1e2b23] text-white'
+                : 'bg-gray-100 text-gray-900'
+            }`}
             autoFocus
           />
           <div className="flex gap-2">
@@ -117,7 +132,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <button
               type="button"
               onClick={() => setShowNewListInput(false)}
-              className="flex-1 bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600"
+              className={`flex-1 p-2 rounded-lg ${
+                theme === 'dark'
+                  ? 'bg-gray-700 text-white hover:bg-gray-600'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
             >
               Cancel
             </button>
@@ -126,27 +145,39 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       ) : (
         <button
           onClick={() => setShowNewListInput(true)}
-          className="w-full flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#1e2b23] hover:text-green-500 mb-4"
+          className={`w-full flex items-center p-3 rounded-lg mb-4 transition-colors ${
+            theme === 'dark'
+              ? 'text-gray-300 hover:bg-[#1e2b23] hover:text-green-500'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-green-600'
+          }`}
         >
           <Plus className="w-5 h-5 mr-3" />
           Add list
         </button>
       )}
 
-      <div className="bg-[#1e2b23] rounded-lg p-4">
+      <div className={`rounded-lg p-4 ${
+        theme === 'dark' ? 'bg-[#1e2b23]' : 'bg-gray-100'
+      }`}>
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-medium text-gray-300">Today Tasks</h3>
-          <button className="text-gray-400 hover:text-white">
+          <h3 className={`text-sm font-medium ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}>Today Tasks</h3>
+          <button className="text-gray-400 hover:text-gray-600">
             <span className="sr-only">Info</span>
             ℹ️
           </button>
         </div>
-        <p className="text-2xl font-bold text-white mb-4">{todayTasks.length}</p>
-        <div className="w-full h-2 bg-[#141414] rounded-full overflow-hidden">
+        <p className={`text-2xl font-bold mb-4 ${
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        }`}>{todayTasks.length}</p>
+        <div className={`w-full h-2 rounded-full overflow-hidden ${
+          theme === 'dark' ? 'bg-[#141414]' : 'bg-gray-200'
+        }`}>
           <div 
-            className="h-full bg-green-500 rounded-full"
+            className="h-full bg-green-500 rounded-full transition-all"
             style={{ 
-              width: `${(todayTasks.filter(t => t.completed).length / todayTasks.length) * 100}%` 
+              width: `${(todayTasks.filter(t => t.completed).length / Math.max(todayTasks.length, 1)) * 100}%` 
             }}
           />
         </div>

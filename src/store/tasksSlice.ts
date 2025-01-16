@@ -9,6 +9,8 @@ const initialState: TasksState = {
   currentList: 'default',
   filter: 'all',
   selectedTaskId: null,
+  viewMode: 'list', // 'list' or 'grid'
+  searchQuery: '',
 };
 
 const tasksSlice = createSlice({
@@ -57,6 +59,12 @@ const tasksSlice = createSlice({
     setCurrentList: (state, action: PayloadAction<string>) => {
       state.currentList = action.payload;
     },
+    setViewMode: (state, action: PayloadAction<'list' | 'grid'>) => {
+      state.viewMode = action.payload;
+    },
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
@@ -71,6 +79,8 @@ export const {
   setSelectedTask,
   addList,
   setCurrentList,
+  setViewMode,
+  setSearchQuery,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

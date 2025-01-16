@@ -11,9 +11,12 @@
   --green-hover: #16a34a;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
 body {
-  background-color: var(--bg-dark);
-  color: white;
+  @apply bg-gray-50 dark:bg-[#1a1a1a] text-gray-900 dark:text-white;
 }
 
 .task-grid {
@@ -22,30 +25,19 @@ body {
   gap: 1rem;
 }
 
-.task-item {
-  background-color: var(--bg-task);
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
-}
-
-.task-item:hover {
-  background-color: var(--bg-task-hover);
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-darker);
+  @apply bg-gray-100 dark:bg-[#141414];
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  @apply bg-gray-300 dark:bg-gray-700 rounded;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  @apply bg-gray-400 dark:bg-gray-600;
 }

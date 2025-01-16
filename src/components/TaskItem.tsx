@@ -6,28 +6,35 @@ import { toggleTask, updateTaskPriority, deleteTask } from '../store/tasksSlice'
 
 interface TaskItemProps {
   task: Task;
+  theme: 'light' | 'dark';
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, theme }) => {
   const dispatch = useDispatch();
 
   return (
     <div className={`group p-4 rounded-lg transition-colors ${
-      task.completed 
-        ? 'bg-[rgba(32,32,32,0.6)]' 
-        : 'bg-[rgba(32,32,32,0.8)] hover:bg-[rgba(38,38,38,0.9)]'
+      theme === 'dark'
+        ? task.completed 
+          ? 'bg-[rgba(32,32,32,0.6)]' 
+          : 'bg-[rgba(32,32,32,0.8)] hover:bg-[rgba(38,38,38,0.9)]'
+        : task.completed
+          ? 'bg-gray-100'
+          : 'bg-white hover:bg-gray-50 shadow-sm'
     }`}>
       <div className="flex items-start gap-3">
         <input
           type="checkbox"
           checked={task.completed}
           onChange={() => dispatch(toggleTask(task.id))}
-          className="mt-1 h-5 w-5 rounded border-gray-600 bg-transparent checked:bg-green-600 checked:border-green-600 focus:ring-0 focus:ring-offset-0"
+          className="mt-1 h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <span className={`${
-              task.completed ? 'line-through text-gray-400' : 'text-white'
+              task.completed 
+                ? 'line-through text-gray-400' 
+                : theme === 'dark' ? 'text-white' : 'text-gray-900'
             }`}>
               {task.title}
             </span>
@@ -39,7 +46,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
               className={`flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md ${
                 task.priority === 'high'
                   ? 'text-yellow-400 bg-yellow-400/10'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                  : theme === 'dark'
+                    ? 'text-gray-400 hover:text-white hover:bg-gray-700'
+                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
               }`}
             >
               <Star className="w-5 h-5" />
@@ -61,5 +70,4 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   );
 };
 
-
-export default TaskItem
+export default TaskItem;

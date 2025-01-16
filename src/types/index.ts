@@ -6,7 +6,7 @@ export interface Task {
   dueDate?: string;
   reminder?: string;
   createdAt: string;
-  listId?: string;
+  listId: string;
 }
 
 export interface TaskList {
@@ -21,12 +21,14 @@ export interface User {
   name: string;
   password: string;
   avatar?: string;
+  theme?: 'light' | 'dark';
 }
 
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   error: string | null;
+  theme: 'light' | 'dark';
 }
 
 export interface TasksState {
@@ -35,4 +37,6 @@ export interface TasksState {
   currentList: string;
   filter: 'all' | 'today' | 'important' | 'planned' | 'assigned';
   selectedTaskId: string | null;
+  viewMode: 'list' | 'grid';
+  searchQuery: string;
 }
