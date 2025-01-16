@@ -7,17 +7,22 @@ import { configureStore } from '@reduxjs/toolkit';
     const persistConfig = {
       key: 'root',
       storage,
-      whitelist: ['auth', 'tasks']
+      whitelist: ['auth', 'tasks'],
     };
 
-    const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-    const persistedTasksReducer = persistReducer(persistConfig, tasksReducer);
+    const persistedReducer = persistReducer(persistConfig, (state, action) => {
+      if (action.type === 'auth/logout') {
+        storage.removeItem('persist:root');
+        return undefined;
+      }
+      return {
+        auth: authReducer(state?.auth, action),
+        tasks: tasksReducer(state?.tasks, action),
+      };
+    });
 
     export const store = configureStore({
-      reducer: {
-        auth: persistedAuthReducer,
-        tasks: persistedTasksReducer,
-      },
+      reducer: persistedReducer,
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
           serializableCheck: false,
